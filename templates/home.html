@@ -16,6 +16,9 @@
 {% if user.is_authenticated %}
 <div class="welcome-box">
     <p>Use the navigation above to record new catches or view your list.</p>
+    {% if user.is_superuser %}
+    <p><a href="{% url 'lookup_admin' %}">Manage species/venues/methods/bait</a></p>
+    {% endif %}
 </div>
 {% else %}
 <div class="welcome-box">
