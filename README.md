@@ -5,7 +5,7 @@ Django web application that allows users to record fish catches for a year.
 ## Features
 
 - User authentication (login/logout) using Django auth framework
-- Create and list catches with fields: date, species, venue, method, bait, weight
+- Create and list catches with fields: date, species, venue, method, bait, weight (lookup values now stored in their own tables)
 - Filterable list by species, venue, method, bait for each user
 - Bootstrap 5 styling via `django-bootstrap5` with a custom green theme
 
@@ -24,7 +24,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Run migrations:
+3. Run migrations (this will also create lookup tables for species, venue, method and bait and seed them with default values):
 
 ```bash
 python manage.py migrate

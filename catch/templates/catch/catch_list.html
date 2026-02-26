@@ -10,32 +10,32 @@
   <div class="col-auto">
     <select name="species" class="form-select">
       <option value="">All species</option>
-      {% for code,label in species_choices %}
-      <option value="{{ code }}" {% if current_filters.species == code %}selected{% endif %}>{{ label }}</option>
+      {% for species in species_choices %}
+      <option value="{{ species.id }}" {% if current_filters.species == species.id|stringformat:"s" %}selected{% endif %}>{{ species.name }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="col-auto">
     <select name="venue" class="form-select">
       <option value="">All venues</option>
-      {% for code,label in venue_choices %}
-      <option value="{{ code }}" {% if current_filters.venue == code %}selected{% endif %}>{{ label }}</option>
+      {% for venue in venue_choices %}
+      <option value="{{ venue.id }}" {% if current_filters.venue == venue.id|stringformat:"s" %}selected{% endif %}>{{ venue.name }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="col-auto">
     <select name="method" class="form-select">
       <option value="">All methods</option>
-      {% for code,label in method_choices %}
-      <option value="{{ code }}" {% if current_filters.method == code %}selected{% endif %}>{{ label }}</option>
+      {% for method in method_choices %}
+      <option value="{{ method.id }}" {% if current_filters.method == method.id|stringformat:"s" %}selected{% endif %}>{{ method.name }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="col-auto">
     <select name="bait" class="form-select">
       <option value="">All bait</option>
-      {% for code,label in bait_choices %}
-      <option value="{{ code }}" {% if current_filters.bait == code %}selected{% endif %}>{{ label }}</option>
+      {% for bait in bait_choices %}
+      <option value="{{ bait.id }}" {% if current_filters.bait == bait.id|stringformat:"s" %}selected{% endif %}>{{ bait.name }}</option>
       {% endfor %}
     </select>
   </div>
@@ -69,10 +69,10 @@
         {% for catch in catches %}
         <tr>
             <td>{{ catch.date }}</td>
-            <td>{{ catch.get_species_display }}</td>
-            <td>{{ catch.get_venue_display }}</td>
-            <td>{{ catch.get_method_display }}</td>
-            <td>{{ catch.get_bait_display }}</td>
+            <td>{{ catch.species.name }}</td>
+            <td>{{ catch.venue.name }}</td>
+            <td>{{ catch.method.name }}</td>
+            <td>{{ catch.bait.name }}</td>
             <td>{{ catch.get_length_display }}</td>
             <td>{{ catch.weight }}</td>
             <td>{{ catch.user.username }}</td>
