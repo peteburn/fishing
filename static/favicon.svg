@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Fish body -->
+  <ellipse cx="50" cy="50" rx="35" ry="25" fill="#1e90ff" stroke="#0047ab" stroke-width="2"/>
+  
+  <!-- Fish head -->
+  <circle cx="25" cy="50" r="18" fill="#1e90ff" stroke="#0047ab" stroke-width="2"/>
+  
+  <!-- Fish eye -->
+  <circle cx="20" cy="45" r="5" fill="#fff"/>
+  <circle cx="21" cy="45" r="3" fill="#000"/>
+  
+  <!-- Fish mouth -->
+  <path d="M 15 50 Q 10 50 12 55" fill="none" stroke="#0047ab" stroke-width="1.5"/>
+  
+  <!-- Top fin -->
+  <path d="M 45 30 L 50 10 L 55 30 Z" fill="#4169e1" stroke="#0047ab" stroke-width="1.5"/>
+  
+  <!-- Bottom fin -->
+  <path d="M 45 70 L 50 90 L 55 70 Z" fill="#4169e1" stroke="#0047ab" stroke-width="1.5"/>
+  
+  <!-- Tail fin -->
+  <path d="M 80 40 L 100 30 L 95 50 L 100 70 L 80 60 Z" fill="#4169e1" stroke="#0047ab" stroke-width="1.5"/>
+  
+  <!-- Side fin detail -->
+  <ellipse cx="50" cy="68" rx="8" ry="6" fill="#4169e1" stroke="#0047ab" stroke-width="1"/>
+</svg>

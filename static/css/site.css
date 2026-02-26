@@ -3,6 +3,7 @@
     --bs-primary: #28a745;
     --bs-secondary: #6c757d;
     --bs-success: #28a745;
+    --header-color: #1e7a33;
     --bs-info: #17a2b8;
     --bs-warning: #ffc107;
     --bs-danger: #dc3545;
@@ -41,4 +42,86 @@ body {
 .navbar .navbar-brand,
 .navbar .nav-link {
     color: #fff !important;
+}
+
+/* Make form labels and page headings match the header background color
+   but only within the main content area to avoid affecting nav elements */
+/* increase specificity and force the color so Bootstrap defaults don't override it */
+.content label,
+.content .form-label,
+.content .form-check-label,
+.content .form-control-label {
+    color: var(--header-color) !important;
+    font-weight: 500;
+    background-color: #d4edda !important;
+    padding: 0.25rem 0.5rem !important;
+    display: inline-block !important;
+}
+
+/* Extra-specific selector to override Bootstrap in the main container */
+.container.mt-4.content label.form-label,
+.container.mt-4.content .form-label {
+    color: var(--header-color) !important;
+    background-color: #d4edda !important;
+    padding: 0.25rem 0.5rem !important;
+    display: inline-block !important;
+}
+
+/* Headings and table headers inside the content area use the darker header color for contrast */
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+    color: var(--header-color) !important;
+    font-weight: 600;
+    background-color: #d4edda !important;
+    padding: 0.5rem !important;
+    display: inline-block !important;
+}
+.content th {
+    color: var(--header-color) !important;
+    font-weight: 600;
+    background-color: #d4edda !important;
+    padding: 0.5rem !important;
+}
+
+/* Exclude welcome-box headings from the background color styling */
+.welcome-box h1, .welcome-box h2, .welcome-box h3, .welcome-box h4, .welcome-box h5, .welcome-box h6 {
+    background-color: transparent !important;
+    padding: 0 !important;
+    display: block !important;
+}
+
+/* Make primary buttons match the header color so Filter and Save match */
+.btn-primary {
+    background-color: var(--header-color) !important;
+    border-color: var(--header-color) !important;
+    color: #fff !important;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: color-mix(in srgb, var(--header-color) 85%, black 15%) !important;
+    border-color: color-mix(in srgb, var(--header-color) 85%, black 15%) !important;
+    color: #fff !important;
+}
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:disabled {
+    background-color: var(--header-color) !important;
+    border-color: var(--header-color) !important;
+    color: #fff !important;
+}
+
+/* Style logout message with white background */
+.logout-message {
+    background-color: #fff !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+    margin-top: 1rem !important;
+}
+
+/* Style lookup instructions with white background */
+.lookup-instructions {
+    background-color: #fff !important;
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
 }

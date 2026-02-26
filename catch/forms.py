@@ -5,12 +5,27 @@ from .models import Catch
 
 
 class CatchForm(forms.ModelForm):
+    # override length field to ensure proper numeric validation and allow blank
+    length = forms.DecimalField(
+        required=False,
+        max_digits=4,
+        decimal_places=1,
+        widget=forms.NumberInput(attrs={'step': '0.1'}),
+    )
+
     class Meta:
         model = Catch
         fields = ['date', 'species', 'venue', 'method', 'bait', 'length', 'weight']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    def clean_length(self):
+        """Convert empty values to ``None`` so the model can handle nulls."""
+        length = self.cleaned_data.get('length')
+        if length in (None, ''):
+            return None
+        return length
 
 
 class RegisterForm(UserCreationForm):

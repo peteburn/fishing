@@ -3,5 +3,7 @@
 {% block title %}Logged out{% endblock %}
 {% block content %}
 <h2>You have been logged out.</h2>
-<p><a href="{% url 'login' %}">Log in again</a> or return to the <a href="{% url 'home' %}">home page</a>.</p>
+<div class="logout-message">
+  <p><a href="{% url 'login' %}">Log in again</a> or return to the <a href="{% url 'home' %}">home page</a>.</p>
+</div>
 {% endblock %}

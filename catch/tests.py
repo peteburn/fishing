@@ -23,8 +23,8 @@ class CatchTests(TestCase):
         worm, _ = Bait.objects.get_or_create(name='Worm')
         insect, _ = Bait.objects.get_or_create(name='Insect')
 
-        Catch.objects.create(user=self.user, date='2025-01-01', species=trout, venue=river, method=fly, bait=worm, length='short', weight=1.2)
-        Catch.objects.create(user=self.other, date='2025-01-02', species=bass, venue=lake, method=spin, bait=insect, length='medium', weight=2.3)
+        Catch.objects.create(user=self.user, date='2025-01-01', species=trout, venue=river, method=fly, bait=worm, length=8.5, weight=1.2)
+        Catch.objects.create(user=self.other, date='2025-01-02', species=bass, venue=lake, method=spin, bait=insect, length=12.3, weight=2.3)
 
     def test_list_requires_login(self):
         resp = self.client.get(reverse('catch_list'))
@@ -38,9 +38,9 @@ class CatchTests(TestCase):
         # ensure the other user's catch doesn't appear in table cells
         self.assertNotContains(resp, '<td>Bass</td>')
         # filter by length
-        resp2 = self.client.get(reverse('catch_list') + '?length=short')
+        resp2 = self.client.get(reverse('catch_list') + '?length=8.5')
         self.assertContains(resp2, '<td>Trout</td>')
-        resp3 = self.client.get(reverse('catch_list') + '?length=medium')
+        resp3 = self.client.get(reverse('catch_list') + '?length=12.3')
         self.assertNotContains(resp3, '<td>Trout</td>')
         # show all users toggle
         resp_all = self.client.get(reverse('catch_list') + '?all=1')
@@ -84,7 +84,53 @@ class CatchTests(TestCase):
             'venue': sea.id,
             'method': trolling.id,
             'bait': Bait.objects.get(name='Artificial lure').id,
-            'length': 'long',
+            'length': '22.5',
             'weight': '3.5',
         })
         self.assertEqual(Catch.objects.filter(user=self.user, species=salmon).count(), 1)
+        # now try submitting with empty length to ensure no exception
+        resp2 = self.client.post(reverse('catch_new'), {
+            'date': '2025-02-02',
+            'species': salmon.id,
+            'venue': sea.id,
+            'method': trolling.id,
+            'bait': Bait.objects.get(name='Artificial lure').id,
+            'length': '',
+            'weight': '4.1',
+        })
+        self.assertEqual(Catch.objects.filter(user=self.user, date='2025-02-02').count(), 1)
+
+    def test_tolerant_decimal_field_handles_bad_db_values(self):
+        """A stray string in the database shouldn't crash the ORM.
+
+        We drop a row in with a non-numeric length using raw SQL and then
+        fetch it back through the model.  ``TolerantDecimalField`` should
+        convert the value to ``None`` instead of propagating a converter
+        error, allowing the record to still be displayed.
+        """
+        from django.db import connection
+        # grab some existing lookup ids so we can build the insert
+        from .models import Species, Venue, Method, Bait
+        trout = Species.objects.get(name='Trout')
+        river = Venue.objects.get(name='River')
+        fly = Method.objects.get(name='Fly fishing')
+        worm = Bait.objects.get(name='Worm')
+
+        with connection.cursor() as cur:
+            cur.execute(
+                "INSERT INTO catch_catch (user_id, date, species_id, venue_id, method_id, bait_id, length, weight) "
+                "VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
+                [self.user.id, '2025-03-01', trout.id, river.id, fly.id, worm.id, 'not a number', '0.5'],
+            )
+        # mimic the migration cleanup which runs once when the schema is
+        # updated; the goal is to prove that bad values are cleared before
+        # the ORM ever tries to convert them.
+        with connection.cursor() as cur:
+            cur.execute(
+                "UPDATE catch_catch "
+                "SET length=NULL "
+                "WHERE length IS NOT NULL AND length <> '' AND length GLOB '*[^0-9.]*'",
+            )
+        # now retrieving should not raise and length should be None
+        bad = Catch.objects.get(date='2025-03-01')
+        self.assertIsNone(bad.length)

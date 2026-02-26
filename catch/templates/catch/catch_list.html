@@ -40,12 +40,7 @@
     </select>
   </div>
   <div class="col-auto">
-    <select name="length" class="form-select">
-      <option value="">All lengths</option>
-      {% for code,label in length_choices %}
-      <option value="{{ code }}" {% if current_filters.length == code %}selected{% endif %}>{{ label }}</option>
-      {% endfor %}
-    </select>
+    <input type="number" name="length" placeholder="Length" step="0.1" class="form-control" value="{{ current_filters.length }}">
   </div>
   <div class="col-auto">
     <button class="btn btn-primary" type="submit">Filter</button>
@@ -73,7 +68,7 @@
             <td>{{ catch.venue.name }}</td>
             <td>{{ catch.method.name }}</td>
             <td>{{ catch.bait.name }}</td>
-            <td>{{ catch.get_length_display }}</td>
+            <td>{{ catch.length }}</td>
             <td>{{ catch.weight }}</td>
             <td>{{ catch.user.username }}</td>
         </tr>
