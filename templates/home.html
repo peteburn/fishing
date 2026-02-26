@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home - Multi Species Fishing Challenge{% endblock %}
+{% block content %}
+<div class="welcome-box">
+    <h1>Welcome to the Multi Species Fishing Challenge</h1>
+</div>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <img src="{% static 'images/fish1.svg' %}" class="img-fluid rounded" alt="Fishing scene">
+    </div>
+    <div class="col-md-6">
+        <img src="{% static 'images/fish2.svg' %}" class="img-fluid rounded" alt="Caught fish">
+    </div>
+</div>
+{% if user.is_authenticated %}
+<div class="welcome-box">
+    <p>Use the navigation above to record new catches or view your list.</p>
+</div>
+{% else %}
+<div class="welcome-box">
+    <p>Please <a href="{% url 'login' %}">login</a> to start recording your catches.</p>
+    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="100" cy="50" rx="80" ry="40" fill="#17a2b8" />
+  <polygon points="20,50 50,30 50,70" fill="#0c5460"/>
+  <circle cx="140" cy="40" r="5" fill="#fff" />
+</svg>

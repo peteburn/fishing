@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Record New Catch{% endblock %}
+{% block content %}
+<h2>Record New Catch</h2>
+<form method="post">
+    {% csrf_token %}
+    {% load django_bootstrap5 %}
+    {% bootstrap_form form %}
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>
+{% endblock %}
