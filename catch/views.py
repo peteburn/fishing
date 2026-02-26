@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import ProtectedError
 from django.forms import modelformset_factory
@@ -10,6 +10,10 @@ from django.shortcuts import redirect
 from .models import Catch, Species, Venue, Method, Bait
 from .forms import CatchForm, RegisterForm
 
+class CatchDetailView(LoginRequiredMixin, DetailView):
+    model = Catch
+    template_name = 'catch/catch_detail.html'
+    context_object_name = 'catch'
 
 class CatchListView(LoginRequiredMixin, ListView):
     model = Catch
@@ -69,6 +73,9 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        # Save with picture if present
+        if self.request.FILES:
+            form.instance.picture = self.request.FILES.get('picture')
         return super().form_valid(form)
 
 

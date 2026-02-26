@@ -15,7 +15,7 @@ class CatchForm(forms.ModelForm):
 
     class Meta:
         model = Catch
-        fields = ['date', 'species', 'venue', 'method', 'bait', 'length', 'weight']
+        fields = ['date', 'species', 'venue', 'method', 'bait', 'length', 'weight', 'picture']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
