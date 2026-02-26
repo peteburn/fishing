@@ -5,6 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Catch, Species, Venue, Method, Bait, LENGTH_CHOICES
 from .forms import CatchForm, RegisterForm
+from django.forms import modelformset_factory
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import redirect
 
 
 class CatchListView(LoginRequiredMixin, ListView):
@@ -75,3 +78,41 @@ class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def lookup_admin(request):
+    """Superuser-only page to maintain the various lookup models.
+
+    Four formsets (species, venue, method, bait) are displayed on a single
+    page.  Each formset allows adding, editing and deleting rows.  The
+    ``user_passes_test`` decorator ensures only superusers can access it.
+    """
+    SpeciesFormSet = modelformset_factory(Species, fields=('name',), can_delete=True, extra=1)
+    VenueFormSet = modelformset_factory(Venue, fields=('name',), can_delete=True, extra=1)
+    MethodFormSet = modelformset_factory(Method, fields=('name',), can_delete=True, extra=1)
+    BaitFormSet = modelformset_factory(Bait, fields=('name',), can_delete=True, extra=1)
+
+    if request.method == 'POST':
+        species_fs = SpeciesFormSet(request.POST, prefix='species')
+        venue_fs = VenueFormSet(request.POST, prefix='venue')
+        method_fs = MethodFormSet(request.POST, prefix='method')
+        bait_fs = BaitFormSet(request.POST, prefix='bait')
+        if species_fs.is_valid() and venue_fs.is_valid() and method_fs.is_valid() and bait_fs.is_valid():
+            species_fs.save()
+            venue_fs.save()
+            method_fs.save()
+            bait_fs.save()
+            return redirect('lookup_admin')
+    else:
+        species_fs = SpeciesFormSet(prefix='species')
+        venue_fs = VenueFormSet(prefix='venue')
+        method_fs = MethodFormSet(prefix='method')
+        bait_fs = BaitFormSet(prefix='bait')
+
+    return render(request, 'catch/lookup_admin.html', {
+        'species_fs': species_fs,
+        'venue_fs': venue_fs,
+        'method_fs': method_fs,
+        'bait_fs': bait_fs,
+    })

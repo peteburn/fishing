@@ -54,6 +54,21 @@ class CatchTests(TestCase):
         resp_logout = self.client.post(reverse('logout'))
         self.assertIn(resp_logout.status_code, (302, 200))  # redirect or show page
 
+    def test_lookup_admin_superuser(self):
+        # create superuser and login
+        admin = User.objects.create_superuser(username='admin', password='pass')
+        self.client.login(username='admin', password='pass')
+        resp = self.client.get(reverse('lookup_admin'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Species')
+
+    def test_lookup_admin_restricted(self):
+        # normal user should not access page
+        self.client.login(username='test', password='pass')
+        resp = self.client.get(reverse('lookup_admin'))
+        # decorator should redirect to login
+        self.assertEqual(resp.status_code, 302)
+
     def test_create_catch_assigns_user(self):
         self.client.login(username='test', password='pass')
         # make sure the lookups exist so we can submit their IDs
