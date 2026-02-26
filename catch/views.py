@@ -114,22 +114,26 @@ def lookup_admin(request):
                 species_fs.save()
             except ProtectedError as e:
                 all_saved = False
-                species_fs.add_error(None, f"Cannot delete Species: {e.msg}. It is referenced by existing catches.")
+                for form in species_fs.forms:
+                    form.add_error(None, f"Cannot delete Species: {str(e)}. It is referenced by existing catches.")
             try:
                 venue_fs.save()
             except ProtectedError as e:
                 all_saved = False
-                venue_fs.add_error(None, f"Cannot delete Venue: {e.msg}. It is referenced by existing catches.")
+                for form in venue_fs.forms:
+                    form.add_error(None, f"Cannot delete Venue: {str(e)}. It is referenced by existing catches.")
             try:
                 method_fs.save()
             except ProtectedError as e:
                 all_saved = False
-                method_fs.add_error(None, f"Cannot delete Method: {e.msg}. It is referenced by existing catches.")
+                for form in method_fs.forms:
+                    form.add_error(None, f"Cannot delete Method: {str(e)}. It is referenced by existing catches.")
             try:
                 bait_fs.save()
             except ProtectedError as e:
                 all_saved = False
-                bait_fs.add_error(None, f"Cannot delete Bait: {e.msg}. It is referenced by existing catches.")
+                for form in bait_fs.forms:
+                    form.add_error(None, f"Cannot delete Bait: {str(e)}. It is referenced by existing catches.")
             if all_saved:
                 return redirect('lookup_admin')
     else:
