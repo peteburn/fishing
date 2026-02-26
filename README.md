@@ -53,6 +53,8 @@ python manage.py runserver
 - The site theme uses green accents and background; static CSS overrides are in `static/css/site.css`.
 - Home page includes decorative fishing images served via Unsplash.
 
+- The "length" attribute for catches previously used text choices; it is now a decimal field.  A migration is included to null out any legacy non‑numeric values.  Run `python manage.py migrate` to apply the cleanup before working with existing data.
+
 - Users only see and can add their own catches.
 - Use filters on the catch list page to narrow results.
 

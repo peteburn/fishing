@@ -1,5 +1,32 @@
 from django.conf import settings
 from django.db import models
+from decimal import InvalidOperation
+
+
+class TolerantDecimalField(models.DecimalField):
+    """DecimalField that safely converts non-numeric database values.
+
+    During the migration from a CharField to DecimalField some existing rows
+    may still contain values like 'short' or 'medium'.  SQLite's normal
+    converter raises a ``TypeError`` when it encounters those strings which
+    bubbles up as the "argument must be int or float" exception.  This field
+    swallows that error and returns ``None`` instead, allowing the ORM to
+    continue working and the form to render without crashing.
+    """
+
+    def from_db_value(self, value, expression, connection):
+        # value is the raw value returned by the database driver
+        if value is None:
+            return None
+        try:
+            # DecimalField doesn't implement its own from_db_value, so
+            # fall back to converting via ``to_python`` which performs
+            # the normal decimal parsing.  If the stored value can't be
+            # interpreted we'll catch the error and return ``None``.
+            return self.to_python(value)
+        except (TypeError, InvalidOperation, ValueError):
+            # non-numeric value stored previously, treat as missing
+            return None
 
 
 # These tables back the dropdowns used by catches.  They allow the
@@ -45,7 +72,7 @@ class Bait(models.Model):
         return self.name
 
 
-# length choices remain in code since they are unlikely to change often
+# length_choices kept for reference but no longer used in the model
 LENGTH_CHOICES = [
     ('short', 'Short (<10 in)'),
     ('medium', 'Medium (10-20 in)'),
@@ -60,7 +87,7 @@ class Catch(models.Model):
     venue = models.ForeignKey(Venue, on_delete=models.PROTECT)
     method = models.ForeignKey(Method, on_delete=models.PROTECT)
     bait = models.ForeignKey(Bait, on_delete=models.PROTECT)
-    length = models.CharField(max_length=20, choices=LENGTH_CHOICES, blank=True)
+    length = TolerantDecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
     weight = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
 
     def __str__(self):

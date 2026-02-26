@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from .models import Catch, Species, Venue, Method, Bait, LENGTH_CHOICES
-from .forms import CatchForm, RegisterForm
+from django.db.models import ProtectedError
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import redirect
+
+from .models import Catch, Species, Venue, Method, Bait
+from .forms import CatchForm, RegisterForm
 
 
 class CatchListView(LoginRequiredMixin, ListView):
@@ -36,7 +37,10 @@ class CatchListView(LoginRequiredMixin, ListView):
         if bait:
             qs = qs.filter(bait_id=bait)
         if length:
-            qs = qs.filter(length=length)
+            try:
+                qs = qs.filter(length=float(length))
+            except (ValueError, TypeError):
+                pass
         return qs
 
     def get_context_data(self, **kwargs):
@@ -45,7 +49,6 @@ class CatchListView(LoginRequiredMixin, ListView):
         ctx['venue_choices'] = Venue.objects.all()
         ctx['method_choices'] = Method.objects.all()
         ctx['bait_choices'] = Bait.objects.all()
-        ctx['length_choices'] = LENGTH_CHOICES
         ctx['current_filters'] = {
             'species': self.request.GET.get('species', ''),
             'venue': self.request.GET.get('venue', ''),
@@ -99,11 +102,29 @@ def lookup_admin(request):
         method_fs = MethodFormSet(request.POST, prefix='method')
         bait_fs = BaitFormSet(request.POST, prefix='bait')
         if species_fs.is_valid() and venue_fs.is_valid() and method_fs.is_valid() and bait_fs.is_valid():
-            species_fs.save()
-            venue_fs.save()
-            method_fs.save()
-            bait_fs.save()
-            return redirect('lookup_admin')
+            all_saved = True
+            try:
+                species_fs.save()
+            except ProtectedError as e:
+                all_saved = False
+                species_fs.add_error(None, f"Cannot delete Species: {e.msg}. It is referenced by existing catches.")
+            try:
+                venue_fs.save()
+            except ProtectedError as e:
+                all_saved = False
+                venue_fs.add_error(None, f"Cannot delete Venue: {e.msg}. It is referenced by existing catches.")
+            try:
+                method_fs.save()
+            except ProtectedError as e:
+                all_saved = False
+                method_fs.add_error(None, f"Cannot delete Method: {e.msg}. It is referenced by existing catches.")
+            try:
+                bait_fs.save()
+            except ProtectedError as e:
+                all_saved = False
+                bait_fs.add_error(None, f"Cannot delete Bait: {e.msg}. It is referenced by existing catches.")
+            if all_saved:
+                return redirect('lookup_admin')
     else:
         species_fs = SpeciesFormSet(prefix='species')
         venue_fs = VenueFormSet(prefix='venue')

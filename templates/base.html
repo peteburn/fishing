@@ -8,6 +8,7 @@
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
     {% bootstrap_javascript %}
 </head>
 <body{% if random_bg %} style="background-image: url('{% static random_bg %}');"{% endif %}>
@@ -36,7 +37,7 @@
     </div>
   </div>
 </nav>
-<div class="container mt-4">
+<div class="container mt-4 content">
     {% block content %}{% endblock %}
 </div>
 </body>

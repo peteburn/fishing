@@ -4,9 +4,11 @@
 {% block title %}Manage Lookups{% endblock %}
 {% block content %}
 <h2>Lookup tables administration</h2>
-<p>Only superusers can view and edit these values. Add new rows by filling the
-"extra" blank entry at the end; delete by checking the box at the left of each
-row.</p>
+<div class="lookup-instructions">
+  <p>Only superusers can view and edit these values. Add new rows by filling the
+  "extra" blank entry at the end; delete by checking the box at the left of each
+  row.</p>
+</div>
 
 <form method="post">
     {% csrf_token %}
