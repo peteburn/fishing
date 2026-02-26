@@ -56,6 +56,7 @@ body {
     background-color: #d4edda !important;
     padding: 0.25rem 0.5rem !important;
     display: inline-block !important;
+    border-radius: 0.5rem !important;
 }
 
 /* Extra-specific selector to override Bootstrap in the main container */
@@ -74,12 +75,14 @@ body {
     background-color: #d4edda !important;
     padding: 0.5rem !important;
     display: inline-block !important;
+    border-radius: 0.5rem !important;
 }
 .content th {
     color: var(--header-color) !important;
     font-weight: 600;
     background-color: #d4edda !important;
     padding: 0.5rem !important;
+    /* No border-radius for table headers */
 }
 
 /* Exclude welcome-box headings from the background color styling */
