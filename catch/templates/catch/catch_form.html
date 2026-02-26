@@ -2,7 +2,7 @@
 {% block title %}Record New Catch{% endblock %}
 {% block content %}
 <h2>Record New Catch</h2>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% load django_bootstrap5 %}
     {% bootstrap_form form %}

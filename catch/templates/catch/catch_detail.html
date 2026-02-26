@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Catch Details{% endblock %}
+{% block content %}
+<h2>Catch Details</h2>
+<table class="table table-bordered">
+    <tr><th>Date</th><td>{{ catch.date }}</td></tr>
+    <tr><th>Species</th><td>{{ catch.species.name }}</td></tr>
+    <tr><th>Venue</th><td>{{ catch.venue.name }}</td></tr>
+    <tr><th>Method</th><td>{{ catch.method.name }}</td></tr>
+    <tr><th>Bait</th><td>{{ catch.bait.name }}</td></tr>
+    <tr><th>Length</th><td>{{ catch.length }}</td></tr>
+    <tr><th>Weight</th><td>{{ catch.weight }}</td></tr>
+    <tr><th>User</th><td>{{ catch.user.username }}</td></tr>
+    {% if catch.picture %}
+    <tr><th>Picture</th><td><img src="{{ catch.picture.url }}" alt="Catch picture" style="max-width:300px;max-height:300px;" class="img-thumbnail"></td></tr>
+    {% endif %}
+</table>
+<a href="{% url 'catch_list' %}" class="btn btn-primary">Back to list</a>
+{% endblock %}

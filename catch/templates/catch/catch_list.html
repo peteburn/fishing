@@ -63,14 +63,14 @@
     <tbody>
         {% for catch in catches %}
         <tr>
-            <td>{{ catch.date }}</td>
-            <td>{{ catch.species.name }}</td>
-            <td>{{ catch.venue.name }}</td>
-            <td>{{ catch.method.name }}</td>
-            <td>{{ catch.bait.name }}</td>
-            <td>{{ catch.length }}</td>
-            <td>{{ catch.weight }}</td>
-            <td>{{ catch.user.username }}</td>
+          <td><a href="{% url 'catch_detail' catch.pk %}">{{ catch.date }}</a></td>
+          <td>{{ catch.species.name }}</td>
+          <td>{{ catch.venue.name }}</td>
+          <td>{{ catch.method.name }}</td>
+          <td>{{ catch.bait.name }}</td>
+          <td>{{ catch.length }}</td>
+          <td>{{ catch.weight }}</td>
+          <td>{{ catch.user.username }}</td>
         </tr>
         {% empty %}
         <tr><td colspan="6">No catches recorded.</td></tr>
