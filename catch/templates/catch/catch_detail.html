@@ -14,6 +14,9 @@
     {% if catch.picture %}
     <tr><th>Picture</th><td><img src="{{ catch.picture.url }}" alt="Catch picture" style="max-width:300px;max-height:300px;" class="img-thumbnail"></td></tr>
     {% endif %}
+    {% if catch.comments %}
+    <tr><th>Comments</th><td>{{ catch.comments|linebreaksbr }}</td></tr>
+    {% endif %}
 </table>
 <a href="{% url 'catch_list' %}" class="btn btn-primary">Back to list</a>
 {% endblock %}

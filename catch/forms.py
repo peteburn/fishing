@@ -7,7 +7,7 @@ from .models import Catch
 class CatchForm(forms.ModelForm):
     # override length field to ensure proper numeric validation and allow blank
     length = forms.DecimalField(
-        required=False,
+        required=True,
         max_digits=4,
         decimal_places=1,
         widget=forms.NumberInput(attrs={'step': '0.1'}),
@@ -15,9 +15,10 @@ class CatchForm(forms.ModelForm):
 
     class Meta:
         model = Catch
-        fields = ['date', 'species', 'venue', 'method', 'bait', 'length', 'weight', 'picture']
+        fields = ['date', 'species', 'venue', 'method', 'bait', 'length', 'weight', 'picture', 'comments']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
+            'comments': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add any comments (optional)'}),
         }
 
     def clean_length(self):
