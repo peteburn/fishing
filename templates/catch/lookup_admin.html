@@ -13,39 +13,70 @@
 <form method="post">
     {% csrf_token %}
 
-    <h3>Species</h3>
-    {{ species_fs.management_form }}
-    {% for form in species_fs %}
-        <div class="mb-3">
-            {% bootstrap_form form %}
-        </div>
-    {% endfor %}
+    <div class="lookup-section">
+      <h3 class="lookup-header" data-section="species" style="cursor:pointer;">Species</h3>
+      <div class="lookup-content" id="species-section" style="display:none;">
+        {{ species_fs.management_form }}
+        {% for form in species_fs %}
+            <div class="mb-3">
+                {% bootstrap_form form %}
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="lookup-section">
+      <h3 class="lookup-header" data-section="venues" style="cursor:pointer;">Venues</h3>
+      <div class="lookup-content" id="venues-section" style="display:none;">
+        {{ venue_fs.management_form }}
+        {% for form in venue_fs %}
+            <div class="mb-3">
+                {% bootstrap_form form %}
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="lookup-section">
+      <h3 class="lookup-header" data-section="methods" style="cursor:pointer;">Methods</h3>
+      <div class="lookup-content" id="methods-section" style="display:none;">
+        {{ method_fs.management_form }}
+        {% for form in method_fs %}
+            <div class="mb-3">
+                {% bootstrap_form form %}
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="lookup-section">
+      <h3 class="lookup-header" data-section="bait" style="cursor:pointer;">Bait</h3>
+      <div class="lookup-content" id="bait-section" style="display:none;">
+        {{ bait_fs.management_form }}
+        {% for form in bait_fs %}
+            <div class="mb-3">
+                {% bootstrap_form form %}
+            </div>
+        {% endfor %}
+      </div>
+    </div>
 
-    <h3>Venues</h3>
-    {{ venue_fs.management_form }}
-    {% for form in venue_fs %}
-        <div class="mb-3">
-            {% bootstrap_form form %}
-        </div>
-    {% endfor %}
-
-    <h3>Methods</h3>
-    {{ method_fs.management_form }}
-    {% for form in method_fs %}
-        <div class="mb-3">
-            {% bootstrap_form form %}
-        </div>
-    {% endfor %}
-
-    <h3>Bait</h3>
-    {{ bait_fs.management_form }}
-    {% for form in bait_fs %}
-        <div class="mb-3">
-            {% bootstrap_form form %}
-        </div>
-    {% endfor %}
-
-    <button class="btn btn-primary" type="submit">Save changes</button>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const headers = document.querySelectorAll('.lookup-header');
+            headers.forEach(header => {
+              header.addEventListener('click', function() {
+                const sectionId = header.dataset.section + '-section';
+                const section = document.getElementById(sectionId);
+                const isOpen = section.style.display === 'block';
+                // Collapse all sections
+                document.querySelectorAll('.lookup-content').forEach(sec => sec.style.display = 'none');
+                // Toggle clicked section
+                if (!isOpen) {
+                  section.style.display = 'block';
+                } // else leave all collapsed
+              });
+            });
+          });
+        </script>
 </form>
 
 {% endblock %}
