@@ -33,7 +33,14 @@ class RegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=False)
     last_name = forms.CharField(max_length=30, required=False)
     email = forms.EmailField(required=True)
+    accept_rules = forms.BooleanField(
+        required=True,
+        label="I confirm that I have read and accept the rules of the challenge",
+        error_messages={
+            'required': 'You cannot register until you have accepted the rules.'
+        }
+    )
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'accept_rules']
