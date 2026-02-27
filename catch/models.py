@@ -90,6 +90,7 @@ class Catch(models.Model):
     length = TolerantDecimalField(max_digits=4, decimal_places=1, blank=True, null=True)
     weight = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     picture = models.ImageField(upload_to='catch_pics/', blank=True, null=True)
+    comments = models.TextField(blank=True, null=True)
 
     def __str__(self):
         # species is a foreign key now
