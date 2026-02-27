@@ -16,6 +16,9 @@ class CatchForm(forms.ModelForm):
     class Meta:
         model = Catch
         fields = ['date', 'species', 'venue', 'method', 'bait', 'length', 'weight', 'picture', 'comments']
+        labels = {
+            'picture': 'Picture (if you do not upload a picture then your catch will not be counted in the challenge)',
+        }
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'comments': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add any comments (optional)'}),
