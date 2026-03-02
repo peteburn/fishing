@@ -12,7 +12,29 @@
     <tr><th>Weight</th><td>{{ catch.weight }}</td></tr>
     <tr><th>User</th><td>{{ catch.user.username }}</td></tr>
     {% if catch.picture %}
-    <tr><th>Picture</th><td><img src="{{ catch.picture.url }}" alt="Catch picture" style="max-width:300px;max-height:300px;" class="img-thumbnail"></td></tr>
+        <tr><th>Picture</th><td>
+            <img src="{{ catch.picture.url }}" alt="Catch picture" style="max-width:300px;max-height:300px;cursor:pointer;" class="img-thumbnail" id="catch-picture-thumb" onclick="showModal()">
+            <!-- Modal -->
+            <div id="imageModal" class="modal" style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;">
+                <span style="position:absolute;top:30px;right:40px;font-size:2em;color:white;cursor:pointer;" onclick="closeModal()">&times;</span>
+                <img src="{{ catch.picture.url }}" alt="Catch picture large" style="max-width:90vw;max-height:90vh;border:5px solid white;box-shadow:0 0 20px #222;">
+            </div>
+            <script>
+                function showModal() {
+                    document.getElementById('imageModal').style.display = 'flex';
+                }
+                function closeModal() {
+                    document.getElementById('imageModal').style.display = 'none';
+                }
+                // Optional: close modal on background click
+                document.addEventListener('DOMContentLoaded', function() {
+                    var modal = document.getElementById('imageModal');
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) closeModal();
+                    });
+                });
+            </script>
+        </td></tr>
     {% endif %}
     {% if catch.comments %}
     <tr><th>Comments</th><td>{{ catch.comments|linebreaksbr }}</td></tr>
