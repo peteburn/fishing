@@ -7,6 +7,10 @@
     {% load static %}
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
+    <!-- Prevent caching of auth-dependent pages -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
     {% bootstrap_javascript %}
