@@ -1,4 +1,10 @@
 db.sqlite3
-catch/migrations/
+catch/migrations
 .venv
 .vscode
+.github
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zjgz7-e_=1zmmf72^*1%_ps&)^5@0q8uj2ltmt^yd8&^fggd=v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['lordburn.de', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['www.lordburn.de', 'lordburn.de', 'localhost', '127.0.0.1']
 
 
 # Application definition
