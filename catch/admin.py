@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Catch, Species, Venue, Method, Bait
+from .models import Catch, Species, Venue, Method, Bait, Profile
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'picture')
 
 # Register your models here.
 

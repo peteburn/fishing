@@ -1,3 +1,19 @@
+# Patch User model to always return a Profile, creating one if needed
+from django.contrib.auth.models import User
+def get_or_create_profile(self):
+    profile, created = Profile.objects.get_or_create(user=self)
+    return profile
+User.add_to_class('profile', property(get_or_create_profile))
+from django.db import models
+from django.contrib.auth.models import User
+
+# User profile extension for profile picture
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"
 from django.conf import settings
 from django.db import models
 from decimal import InvalidOperation

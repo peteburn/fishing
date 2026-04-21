@@ -33,6 +33,16 @@
                 {% csrf_token %}
                 <button type="submit" class="nav-link btn btn-link">Logout</button>
             </form>
+            </li>
+            <li class="nav-item d-flex align-items-center ms-2">
+              <a href="/profile/picture/" class="navbar-text nav-link d-flex align-items-center p-0" style="font-weight: 500;">
+                {% if user.profile.picture %}
+                  <img src="{{ user.profile.picture.url }}" alt="Profile picture" class="rounded-circle me-2" style="width:32px;height:32px;object-fit:cover;">
+                {% else %}
+                  <span class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center me-2" style="width:32px;height:32px;color:white;font-size:1.1rem;">{{ user.username|first|upper }}</span>
+                {% endif %}
+              </a>
+              <a href="/profile/password/" class="nav-link p-0" style="font-weight: 500;">{{ user.username }}</a>
           </li>
         {% else %}
           <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
