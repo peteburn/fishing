@@ -30,6 +30,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('logout/', LogoutView.as_view(), name='logout'),  # alternate path
     path('catch/', include('catch.urls')),
+    path('profile/', include('catch.urls_profile')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('register/', RegisterView.as_view(), name='register'),
 ]

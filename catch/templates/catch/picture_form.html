@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Update Profile Picture{% endblock %}
+{% block content %}
+<h2>Update Profile Picture</h2>
+<div class="card mt-3 mb-3">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% load django_bootstrap5 %}
+      <div class="mb-3 d-flex align-items-center">
+        {% if user.profile.picture %}
+          <img src="{{ user.profile.picture.url }}" alt="Profile picture" class="rounded-circle me-3" style="width:64px;height:64px;object-fit:cover;">
+        {% else %}
+          <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="width:64px;height:64px;color:white;font-size:2rem;">
+            {{ user.username|first|upper }}
+          </div>
+        {% endif %}
+        <div>
+          <label class="form-label">Change Profile Picture</label>
+          {{ picture_form.picture }}
+        </div>
+        <button class="btn btn-primary ms-2" name="picture" value="1" type="submit" style="height:38px;">Update Picture</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

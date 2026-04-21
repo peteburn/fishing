@@ -9,6 +9,7 @@ class CatchConfig(AppConfig):
         # after migrations run, ensure the lookup tables contain the
         # default values from the original choice lists.
         post_migrate.connect(populate_lookups, sender=self)
+        import catch.signals
 
 
 def populate_lookups(sender, **kwargs):
