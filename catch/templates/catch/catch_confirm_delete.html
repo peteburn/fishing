@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Delete Catch{% endblock %}
+{% block content %}
+<h2>Confirm Delete</h2>
+<p>Are you sure you want to delete this catch?</p>
+<form method="post">{% csrf_token %}
+    <button type="submit" class="btn btn-primary me-2">Yes, delete</button>
+    <a href="{{ catch.get_absolute_url|default:redirect_url }}" class="btn btn-primary">Cancel</a>
+</form>
+{% endblock %}
