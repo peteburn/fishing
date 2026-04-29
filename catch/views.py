@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import ProtectedError
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import user_passes_test
@@ -77,6 +77,29 @@ class CatchCreateView(LoginRequiredMixin, CreateView):
         if self.request.FILES:
             form.instance.picture = self.request.FILES.get('picture')
         return super().form_valid(form)
+
+
+class CatchUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Catch
+    form_class = CatchForm
+    template_name = 'catch/catch_form.html'
+    success_url = reverse_lazy('catch_list')
+
+    def test_func(self):
+        return self.get_object().user == self.request.user
+
+class CatchDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Catch
+    template_name = 'catch/catch_confirm_delete.html'
+    success_url = reverse_lazy('catch_list')
+
+    def test_func(self):
+        return self.get_object().user == self.request.user
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['redirect_url'] = self.success_url
+        return ctx
 
 
 class RegisterView(CreateView):

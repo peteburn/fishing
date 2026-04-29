@@ -41,4 +41,8 @@
     {% endif %}
 </table>
 <a href="{% url 'catch_list' %}" class="btn btn-primary">Back to list</a>
+{% if user == catch.user %}
+    <a href="{% url 'catch_edit' catch.pk %}" class="btn btn-primary me-2">Edit</a>
+    <a href="{% url 'catch_delete' catch.pk %}" class="btn btn-primary">Delete</a>
+{% endif %}
 {% endblock %}
