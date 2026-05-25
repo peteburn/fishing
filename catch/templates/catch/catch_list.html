@@ -67,7 +67,14 @@
           <td>{{ catch.bait.name }}</td>
           <td>{{ catch.length }}</td>
           <td>{{ catch.weight }}</td>
-          <td>{{ catch.user.username }}</td>
+          <td style="display: flex; align-items: center;">
+            {% if catch.user.profile.picture %}
+              <img src="{{ catch.user.profile.picture.url }}" alt="Profile picture" style="width:32px; height:32px; object-fit:cover; border-radius:50%; margin-right:8px;">
+            {% else %}
+              <span class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center" style="width:32px;height:32px;color:white;font-size:1.1rem;margin-right:8px;">{{ catch.user.username|first|upper }}</span>
+            {% endif %}
+            {{ catch.user.username }}
+          </td>
         </tr>
         {% empty %}
         <tr><td colspan="8">No catches recorded.</td></tr>
