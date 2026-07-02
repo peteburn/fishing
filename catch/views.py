@@ -1,6 +1,8 @@
+from collections import defaultdict
+
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import ProtectedError
 from django.forms import modelformset_factory
@@ -62,6 +64,72 @@ class CatchListView(LoginRequiredMixin, ListView):
             'all': self.request.GET.get('all', ''),
         }
         ctx['show_all'] = self.request.GET.get('all') == '1'
+        return ctx
+
+
+class LeaderboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'catch/leaderboard.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        catches = Catch.objects.select_related('user', 'species').order_by('species_id', '-length', 'date', 'pk')
+
+        user_stats = {}
+        species_users = defaultdict(set)
+        species_catches = defaultdict(list)
+        special_bonus_species = {'gudgeon', 'minnow', 'stickleback'}
+
+        for catch in catches:
+            stats = user_stats.setdefault(
+                catch.user_id,
+                {
+                    'user': catch.user,
+                    'species_ids': set(),
+                    'special_bonus_awarded': False,
+                },
+            )
+            stats['species_ids'].add(catch.species_id)
+            species_users[catch.species_id].add(catch.user_id)
+            species_catches[catch.species_id].append(catch)
+            if catch.species.name.strip().lower() in special_bonus_species:
+                stats['special_bonus_awarded'] = True
+
+        leaderboard = []
+        for stats in user_stats.values():
+            species_points = len(stats['species_ids'])
+            bonus_points = 1 if stats['special_bonus_awarded'] else 0
+            leaderboard.append({
+                'user': stats['user'],
+                'species_points': species_points,
+                'bonus_points': bonus_points,
+                'total_points': species_points + bonus_points,
+            })
+
+        for species_id, catches_for_species in species_catches.items():
+            if len(species_users[species_id]) < 2:
+                continue
+            scored_catches = [catch for catch in catches_for_species if catch.length is not None]
+            if not scored_catches:
+                continue
+            max_length = max(catch.length for catch in scored_catches)
+            winners = [catch for catch in scored_catches if catch.length == max_length]
+            if len(winners) != 1:
+                continue
+            winner = winners[0]
+            for row in leaderboard:
+                if row['user'].id == winner.user_id:
+                    row['bonus_points'] += 1
+                    row['total_points'] += 1
+                    break
+
+        leaderboard.sort(
+            key=lambda row: (
+                -row['total_points'],
+                -row['species_points'],
+                row['user'].username.lower(),
+            )
+        )
+        ctx['leaderboard'] = leaderboard
         return ctx
 
 

@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import CatchListView, CatchCreateView, RegisterView, lookup_admin
+from .views import CatchListView, CatchCreateView, RegisterView, LeaderboardView, lookup_admin
 from .views import CatchDetailView, CatchUpdateView, CatchDeleteView
 from .views_rules import RulesView
 
 urlpatterns = [
     path('', CatchListView.as_view(), name='catch_list'),
+    path('leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
     path('new/', CatchCreateView.as_view(), name='catch_new'),
     path('<int:pk>/', CatchDetailView.as_view(), name='catch_detail'),
     path('<int:pk>/edit/', CatchUpdateView.as_view(), name='catch_edit'),

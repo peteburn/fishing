@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Leaderboard{% endblock %}
+{% block content %}
+<h2>Leaderboard</h2>
+<div style="background-color: #d4edda; color: #1e7a33; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #d9e8d9; display: block; margin-bottom: 1rem; font-weight: 500;">
+  Points are awarded for species caught, longest fish per shared species, and one special bonus for catching a gudgeon, minnow, or stickleback.
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Species Points</th>
+            <th>Bonus Points</th>
+            <th>Total Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in leaderboard %}
+        <tr>
+          <td style="display: flex; align-items: center;">
+            {% if row.user.profile.picture %}
+              <img src="{{ row.user.profile.picture.url }}" alt="Profile picture" style="width:32px; height:32px; object-fit:cover; border-radius:50%; margin-right:8px;">
+            {% else %}
+              <span class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center" style="width:32px;height:32px;color:white;font-size:1.1rem;margin-right:8px;">{{ row.user.username|first|upper }}</span>
+            {% endif %}
+            {{ row.user.username }}
+          </td>
+          <td>{{ row.species_points }}</td>
+          <td>{{ row.bonus_points }}</td>
+          <td>{{ row.total_points }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No catches recorded.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
