@@ -93,6 +93,16 @@ body {
     display: block !important;
 }
 
+.content .leaderboard-note {
+    color: var(--header-color) !important;
+    background-color: #fff !important;
+    padding: 0.5rem !important;
+    border-radius: 0.5rem !important;
+    font-weight: 500;
+    display: block !important;
+    border: 1px solid #d9e8d9 !important;
+}
+
 /* Make primary buttons match the header color so Filter and Save match */
 .btn-primary {
     background-color: var(--header-color) !important;

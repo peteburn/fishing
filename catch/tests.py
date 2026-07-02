@@ -47,6 +47,44 @@ class CatchTests(TestCase):
         self.assertContains(resp_all, '<td>Bass</td>')
         self.assertContains(resp_all, '<td>other</td>')
 
+    def test_leaderboard_scores_and_order(self):
+        from .models import Species, Venue, Method, Bait
+
+        self.client.login(username='test', password='pass')
+        gudgeon, _ = Species.objects.get_or_create(name='Gudgeon')
+        minnow, _ = Species.objects.get_or_create(name='Minnow')
+        chub, _ = Species.objects.get_or_create(name='Chub')
+        river = Venue.objects.get(name='River')
+        lake = Venue.objects.get(name='Lake')
+        fly = Method.objects.get(name='Fly fishing')
+        spin = Method.objects.get(name='Spinning')
+        worm = Bait.objects.get(name='Worm')
+        insect = Bait.objects.get(name='Insect')
+
+        Catch.objects.create(user=self.user, date='2025-01-03', species=gudgeon, venue=river, method=fly, bait=worm, length=4.0, weight=0.3)
+        Catch.objects.create(user=self.user, date='2025-01-04', species=Species.objects.get(name='Trout'), venue=river, method=fly, bait=worm, length=8.5, weight=1.2)
+        Catch.objects.create(user=self.user, date='2025-01-05', species=Species.objects.get(name='Bass'), venue=lake, method=spin, bait=insect, length=11.0, weight=2.0)
+        Catch.objects.create(user=self.user, date='2025-01-06', species=chub, venue=lake, method=spin, bait=insect, length=7.0, weight=0.8)
+
+        Catch.objects.create(user=self.other, date='2025-01-07', species=Species.objects.get(name='Trout'), venue=lake, method=spin, bait=insect, length=9.5, weight=2.3)
+        Catch.objects.create(user=self.other, date='2025-01-08', species=minnow, venue=lake, method=spin, bait=insect, length=2.2, weight=0.2)
+        Catch.objects.create(user=self.other, date='2025-01-09', species=chub, venue=lake, method=spin, bait=insect, length=7.0, weight=0.9)
+
+        resp = self.client.get(reverse('leaderboard'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Leaderboard')
+        self.assertContains(resp, 'test')
+        self.assertContains(resp, 'other')
+        self.assertContains(resp, '<td>4</td>')
+        self.assertContains(resp, '<td>1</td>')
+        self.assertContains(resp, '<td>7</td>')
+        self.assertContains(resp, '<td>3</td>')
+
+        body = resp.content.decode().split('<tbody>')[1].split('</tbody>')[0]
+        test_row = body.index('test')
+        other_row = body.index('other')
+        self.assertLess(other_row, test_row)
+
     def test_logout_post(self):
         self.client.login(username='test', password='pass')
         # logout requires POST; a GET should not be allowed
